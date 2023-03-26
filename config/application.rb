@@ -23,5 +23,11 @@ module ApiAndesAirline
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # Establish a connection to the default database when the application starts up
+    config.after_initialize do
+      ActiveRecord::Base.establish_connection(:default)
+    end
+
   end
 end

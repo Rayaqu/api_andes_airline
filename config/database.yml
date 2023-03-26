@@ -6,7 +6,8 @@
 #
 default: &default
   adapter: mysql2
-  encoding: utf8mb4
+  encoding: utf8
+  reconnect: true
   database: airline
   username: bsale_test
   password: bsale_test
