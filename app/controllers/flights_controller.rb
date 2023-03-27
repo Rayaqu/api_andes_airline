@@ -21,7 +21,7 @@ class FlightsController < ApplicationController
     }
 
     render json: { code: 200, data: response_data }
-  rescue => e
-    render json: { code: 400, errors: 'could not connect to db' }
+  # rescue => e
+  #   render json: { code: 400, errors: 'could not connect to db' }
   end
 end

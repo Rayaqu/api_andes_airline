@@ -28,6 +28,7 @@ module ApiAndesAirline
     config.after_initialize do
       ActiveRecord::Base.establish_connection(:default)
     end
-
+    
+    config.active_record.pluralize_table_names = false
   end
 end
