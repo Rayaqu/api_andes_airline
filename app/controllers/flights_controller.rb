@@ -78,6 +78,11 @@ class FlightsController < ApplicationController
         passengers:
       }
     }
+  rescue ActiveRecord::RecordNotFound
+    render json: {
+      code: 404,
+      data: {}
+    }
   end
 
   def retrieve_seat(seat_id, seat_type_id, flight, _passenger_id)
