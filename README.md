@@ -1,18 +1,18 @@
 # Andes Airline simulación Check-in
 RESTful API desarrollado en **Ruby** y **Ruby on Rails** usando las últimas versiones del software.<br>
 Desplegado en [Render](https://render.com/) y probado en [POSTMAN](https://www.postman.com/).
-
 <p align="center">
   <img width="460" height="300" src="https://i.imgur.com/kxxai5o.png">
 </p>
-
+<br>
+URL de Acceso a la API: https://andes-airline.onrender.com/flights/1/passengers
 
 ## Instrucciones
 - Si se desea probar la API en Postman, se requerirá una cuenta gratuita.
-- Copiar la siguiente URL para acceder a la API:
+- Copiar la siguiente dirección para acceder a la API:
 `https://andes-airline.onrender.com/flights/ID/passengers`
-Reemplazar el ID por el número de `flight_id` deseado.
-- Pegar en la barra de direcciones de Postman, seleccionar el método GET y hacer clic en **Send**.
+- Pegar en la barra de direcciones de Postman y seleccionar el método GET.
+- Reemplazar el ID en la dirección por el número de `flight_id` deseado y hacer clic en **Send**.
 <br>
 La respuesta también se muestra en el navegador.<br>
 <p align="center">
