@@ -22,3 +22,7 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+Tal como se documenta en la página oficial de Render.
+La API será lenta despues de 15 minutos sin usar. En esos casos, puede causar una carga lenta de hasta 30 segundos.
+https://render.com/docs/free#free-web-services
