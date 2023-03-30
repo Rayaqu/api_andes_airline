@@ -107,9 +107,9 @@ class FlightsController < ApplicationController
       seat_id
     else
       # Confirm that matrix seat removal is working
-      $airplane_1.each do |row|
-        puts row.join("\t")
-      end
+      # $airplane_1.each do |row|
+      #   puts row.join("\t")
+      # end
 
       case flight.airplane_id # Generate seats
       when 1 # Airplane 1
