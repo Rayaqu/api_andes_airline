@@ -1,41 +1,45 @@
 class FlightsController < ApplicationController
-  # Airplane 1 matrix seat distribution
-  $airplane_1 = Array.new(7) { Array.new(34) }
-  seats_1 = 1
-  # Loop through each row and col
-  ('A'..'G').each do |row|
-    (1..34).each do |col|
-      # Check if the cell should be ignored
-      if (col.between?(5, 7) || col.between?(16, 18)) ||
-         (row == 'D') ||
-         (row == 'C' && col.between?(1, 4)) ||
-         (row == 'E' && col.between?(1, 4))
-        $airplane_1[row.ord - 'A'.ord][col - 1] = nil
-      else
-        $airplane_1[row.ord - 'A'.ord][col - 1] = seats_1
-        seats_1 += 1
+  before_action :reset_global_variable
+
+  def reset_global_variable
+    # Airplane 1 matrix seat distribution
+    $airplane_1 = Array.new(7) { Array.new(34) }
+    seats_1 = 1
+    # Loop through each row and col
+    ('A'..'G').each do |row|
+      (1..34).each do |col|
+        # Check if the cell should be ignored
+        if (col.between?(5, 7) || col.between?(16, 18)) ||
+           (row == 'D') ||
+           (row == 'C' && col.between?(1, 4)) ||
+           (row == 'E' && col.between?(1, 4))
+          $airplane_1[row.ord - 'A'.ord][col - 1] = nil
+        else
+          $airplane_1[row.ord - 'A'.ord][col - 1] = seats_1
+          seats_1 += 1
+        end
       end
     end
-  end
 
-  # Airplane 2 matrix seat distribution
-  $airplane_2 = Array.new(9) { Array.new(31) }
-  seats_2 = 161
-  # Loop through each row and col
-  ('A'..'I').each do |row|
-    (1..31).each do |col|
-      # Check if the cell should be ignored
-      if (col.between?(6, 8) || col.between?(15, 17)) ||
-         (row == 'C') ||
-         (row == 'G') ||
-         (row == 'B' && col.between?(1, 5)) ||
-         (row == 'D' && col.between?(1, 5)) ||
-         (row == 'F' && col.between?(1, 5)) ||
-         (row == 'H' && col.between?(1, 5))
-        $airplane_2[row.ord - 'A'.ord][col - 1] = nil
-      else
-        $airplane_2[row.ord - 'A'.ord][col - 1] = seats_2
-        seats_2 += 1
+    # Airplane 2 matrix seat distribution
+    $airplane_2 = Array.new(9) { Array.new(31) }
+    seats_2 = 161
+    # Loop through each row and col
+    ('A'..'I').each do |row|
+      (1..31).each do |col|
+        # Check if the cell should be ignored
+        if (col.between?(6, 8) || col.between?(15, 17)) ||
+           (row == 'C') ||
+           (row == 'G') ||
+           (row == 'B' && col.between?(1, 5)) ||
+           (row == 'D' && col.between?(1, 5)) ||
+           (row == 'F' && col.between?(1, 5)) ||
+           (row == 'H' && col.between?(1, 5))
+          $airplane_2[row.ord - 'A'.ord][col - 1] = nil
+        else
+          $airplane_2[row.ord - 'A'.ord][col - 1] = seats_2
+          seats_2 += 1
+        end
       end
     end
   end
@@ -103,9 +107,9 @@ class FlightsController < ApplicationController
       seat_id
     else
       # Confirm that matrix seat removal is working
-      # $airplane_1.each do |row|
-      #   puts row.join("\t")
-      # end
+      $airplane_1.each do |row|
+        puts row.join("\t")
+      end
 
       case flight.airplane_id # Generate seats
       when 1 # Airplane 1
