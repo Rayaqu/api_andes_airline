@@ -1,6 +1,20 @@
 class FlightsController < ApplicationController
   before_action :reset_global_variable
 
+  rescue_from ActiveRecord::DatabaseConnectionError do |_e|
+    render json: {
+      code: 400,
+      errors: 'could not connect to db'
+    }
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |_e|
+    render json: {
+      "code": 404,
+      "data": {}
+    }
+  end
+
   def reset_global_variable
     # Airplane 1 matrix seat distribution
     $airplane_1 = Array.new(7) { Array.new(34) }
@@ -63,7 +77,7 @@ class FlightsController < ApplicationController
         boardingPassId: bp.boarding_pass_id,
         purchaseId: bp.purchase_id,
         seatTypeId: bp.seat_type_id,
-        seatId: retrieve_seat(bp.seat_id, bp.seat_type_id, flight, bp.passenger_id)
+        seatId: retrieve_seat(bp.seat_id, bp.seat_type_id, flight)
       }
     end
     render json: {
@@ -78,14 +92,9 @@ class FlightsController < ApplicationController
         passengers:
       }
     }
-  rescue ActiveRecord::RecordNotFound
-    render json: {
-      code: 404,
-      data: {}
-    }
   end
 
-  def retrieve_seat(seat_id, seat_type_id, flight, _passenger_id)
+  def retrieve_seat(seat_id, seat_type_id, flight)
     if !seat_id.nil?
       # Take occupied seat out from the planes
       case flight.airplane_id
@@ -153,9 +162,9 @@ class FlightsController < ApplicationController
           while seat_id.nil?
             row = ('A'..'I').to_a.sample
             col = (1..5).to_a.sample
-            value = $airplane_2[row.ord - 'A'.ord][col - 1] # Check if contains non null value
+            value = $airplane_2[row.ord - 'A'.ord][col - 1]
             seat_id = value unless value.nil?
-            $airplane_2[row.ord - 'A'.ord][col - 1] = nil # Eliminate the seat from the matrix
+            $airplane_2[row.ord - 'A'.ord][col - 1] = nil
           end
           seat_id
         when 2 # For medium class
