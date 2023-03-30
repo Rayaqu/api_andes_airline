@@ -3,7 +3,7 @@ Desarrollado en Ruby y Ruby on Rails usando las últimas versiones del software.
 Desplegado en [Render](https://render.com/).
 
 ## Instrucciones
-Usar la siguiente URL para acceder a la API:
+Usar la siguiente URL para acceder a la API:<br>
 https://andes-airline.onrender.com/flights/ID/passengers
 
 Reemplazar el ID por el número del flight_id deseado.
