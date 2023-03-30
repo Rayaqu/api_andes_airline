@@ -47,3 +47,9 @@ group :development do
 end
 
 gem "mysql2"
+
+gem "matrix", "~> 0.4.2"
+
+gem "activerecord-import"
+
+# gem "bulk_insert"
