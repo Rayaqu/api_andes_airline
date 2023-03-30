@@ -6,7 +6,7 @@ Desplegado en [Render](https://render.com/).
 Usar la siguiente URL para acceder a la API:<br>
 https://andes-airline.onrender.com/flights/ID/passengers
 
-Reemplazar el ID por el número del flight_id deseado.
+Reemplazar el ID por el número del flight_id deseado.<br>
 También se puede probar usando la aplicación de [POSTMAN](https://www.postman.com/).
 
 ### Notas:
