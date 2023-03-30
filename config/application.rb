@@ -30,5 +30,6 @@ module ApiAndesAirline
     end
     
     config.active_record.pluralize_table_names = false
+    config.secret_key_base = Rails.application.credentials.secret_key_base
   end
 end
