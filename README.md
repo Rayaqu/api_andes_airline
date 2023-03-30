@@ -7,7 +7,7 @@ Usar la siguiente URL para acceder a la API:
 https://andes-airline.onrender.com/flights/ID/passengers
 
 Reemplazar el ID por el número del flight_id deseado.
-También se puede 
+También se puede probar usando la aplicación de [https://www.postman.com/](POSTMAN).
 
 ### Notas:
 Render tiene algunas limitaciones en el Free Tier.
