@@ -1,5 +1,5 @@
 # Andes Airline simulación Check-in
-RESTful API desarrollado en Ruby y Ruby on Rails usando las últimas versiones del software.
+RESTful API desarrollado en Ruby y Ruby on Rails usando las últimas versiones del software.<br>
 Desplegado en [Render](https://render.com/).
 
 ## Instrucciones
