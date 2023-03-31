@@ -12,6 +12,7 @@ URL de Acceso a la API: https://andes-airline.onrender.com/flights/1/passengers
 - Todos los pasajeros están distribuídos de acuerdo a su tipo de asiento
 - Pasajeros organizados por tarjeta de embarque
 - Cada menor de edad se sienta al lado de un acompañante adulto
+- Los asientos no están distribuídos de manera aleatoria, sino de manera organizada.
 
 ## Instrucciones
 1. Copiar la siguiente dirección para acceder a la API:
