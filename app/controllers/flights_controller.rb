@@ -94,7 +94,7 @@ class FlightsController < ApplicationController
           break
         end
 
-        # update the contents of the corresponding cell in the matrix with the data from the current boarding pass
+        # Update each element with the elements of boarding_pass
         next unless row && col
 
         $airplane_1[row][col] = {
@@ -107,6 +107,28 @@ class FlightsController < ApplicationController
       end
     when 2
       # put your code here
+      boarding_passes.each do |boarding_pass|
+        # find the row and column indices of the seat in the matrix
+        row = nil
+        col = nil
+        $airplane_2.each_with_index do |row_data, i|
+          next unless row_data.include?(boarding_pass.seat_id)
+
+          row = i
+          col = row_data.index(boarding_pass.seat_id)
+          break
+        end
+
+        next unless row && col
+
+        $airplane_2[row][col] = {
+          passenger_id: boarding_pass.passenger.id,
+          purchase_id: boarding_pass.purchase_id,
+          seat_type_id: boarding_pass.seat_type_id,
+          age: boarding_pass.passenger.age,
+          seat_id: boarding_pass.seat_id
+        }
+      end
     end
 
     passengers = boarding_passes.map do |bp|
