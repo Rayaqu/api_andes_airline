@@ -31,5 +31,6 @@ module ApiAndesAirline
     
     config.active_record.pluralize_table_names = false
     config.secret_key_base = Rails.application.credentials.secret_key_base
+    config.autoload_paths << "#{Rails.root}/app/airplane"
   end
 end
