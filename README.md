@@ -7,6 +7,13 @@ Desplegado en [Render](https://render.com/) y probado en [POSTMAN](https://www.p
 <br>
 URL de Acceso a la API: https://andes-airline.onrender.com/flights/1/passengers
 
+## Características
+- Matrices de los dos aviones con los asientos designados
+- Todos los pasajeros están distribuídos de acuerdo a su tipo de asiento
+- Pasajeros organizados por tarjeta de embarque
+- Cada menor de edad se sienta al lado de un acompañante adulto
+- Los asientos no están distribuídos de manera aleatoria, sino de manera organizada.
+
 ## Instrucciones
 1. Copiar la siguiente dirección para acceder a la API:
 `https://andes-airline.onrender.com/flights/ID/passengers`
