@@ -36,4 +36,5 @@
 
 /config/credentials/production.key
 
-.vscode\launch.json
+/.vscode/*
+/.vscode/launch.json
