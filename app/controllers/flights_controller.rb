@@ -33,7 +33,6 @@ class FlightsController < ApplicationController
       col = nil
       airplane.each_with_index do |row_data, i|
         next unless row_data.include?(boarding_pass.seat_id)
-
         row = i
         col = row_data.index(boarding_pass.seat_id)
         break
@@ -41,7 +40,6 @@ class FlightsController < ApplicationController
 
       # Update each element with the elements of boarding_pass
       next unless row && col
-
       airplane[row][col] = {
         passenger_id: boarding_pass.passenger.id,
         purchase_id: boarding_pass.purchase_id,
@@ -66,8 +64,6 @@ class FlightsController < ApplicationController
     person = boarding_passes.map do |boarding_pass|
       {
         passenger_id: boarding_pass.passenger.id,
-        purchase_id: boarding_pass.purchase_id,
-        seat_type_id: boarding_pass.seat_type_id,
         age: boarding_pass.passenger.age,
         seat_id: boarding_pass.seat_id
       }
@@ -109,11 +105,37 @@ class FlightsController < ApplicationController
     }
   end
 
+  def generate_seat(airplane, seat_id, age, person, passenger_id, i, j)
+    age = person.find { |p| p[:passenger_id] == passenger_id }[:age] # retrieve age from person
+    if age < 18 # if passenger is a kid
+      if i > 0 && airplane[i - 1][j].is_a?(Hash) && airplane[i - 1][j][:age] < 18 # if previous seat in column is a kid
+        seat_id = airplane[i + 1][j] # retrieve integer from next seat in column
+        airplane[i + 1][j] = # set current seat with hash of passenger_id
+          person.find do |p|
+            p[:passenger_id] == passenger_id
+          end
+        seat_id
+      else # if previous seat in column is an adult (or it is the first seat in column)
+        seat_id = airplane[i][j] # retrieve integer from the current seat
+        airplane[i][j] = person.find { |p| p[:passenger_id] == passenger_id }
+        seat_id
+      end
+    else # if passenger is an adult
+      seat_id = airplane[i][j] # retrieve integer from the current seat
+      airplane[i][j] = # set current seat with hash of passenger_id
+        person.find do |p|
+          p[:passenger_id] == passenger_id
+        end
+      seat_id
+    end
+  end
+
   def retrieve_seat(seat_id, seat_type_id, flight, age, person, passenger_id)
     return seat_id if seat_id.present?
 
     case flight.airplane_id
     when 1
+      airplane = $airplane_1
       case seat_type_id
       when 1 # Generate seat for premium class
         rows = $airplane_1.length
@@ -123,26 +145,7 @@ class FlightsController < ApplicationController
           for j in 0...columns # iterate over columns
             for i in 0...rows # iterate over rows
               next unless $airplane_1[i][j].is_a?(Integer) # if it's an integer
-
-              age = person.find { |p| p[:passenger_id] == passenger_id }[:age] # retrieve age from person
-              if age < 18 # if passenger is a kid
-                if i > 0 && $airplane_1[i - 1][j].is_a?(Hash) && $airplane_1[i - 1][j][:age] < 18 # if previous seat in column is a kid
-                  seat_id = $airplane_1[i + 1][j] # retrieve integer from next seat in column
-                  $airplane_1[i + 1][j] = # set current seat with hash of passenger_id
-                    person.find do |p|
-                      p[:passenger_id] == passenger_id
-                    end
-                else # if previous seat in column is an adult (or it is the first seat in column)
-                  seat_id = $airplane_1[i][j] # retrieve integer from the current seat
-                  $airplane_1[i][j] = person.find { |p| p[:passenger_id] == passenger_id }
-                end
-              else # if passenger is an adult
-                seat_id = $airplane_1[i][j] # retrieve integer from the current seat
-                $airplane_1[i][j] = # set current seat with hash of passenger_id
-                  person.find do |p|
-                    p[:passenger_id] == passenger_id
-                  end
-              end
+              seat_id = generate_seat(airplane, seat_id, age, person, passenger_id, i, j)
               throw :found_integer # exit both loops
             end
           end
@@ -156,35 +159,13 @@ class FlightsController < ApplicationController
           for j in 7...columns # iterate over columns
             for i in 0...rows # iterate over rows
               next unless $airplane_1[i][j].is_a?(Integer) # if it's an integer
-
-              age = person.find { |p| p[:passenger_id] == passenger_id }[:age] # retrieve age from person
-              if age < 18 # if passenger is a kid
-                if i > 0 && $airplane_1[i - 1][j].is_a?(Hash) && $airplane_1[i - 1][j][:age] < 18 # if previous seat in column is a kid
-                  seat_id = $airplane_1[i + 1][j] # retrieve integer from next seat in column
-                  $airplane_1[i + 1][j] = # set current seat with hash of passenger_id
-                    person.find do |p|
-                      p[:passenger_id] == passenger_id
-                    end
-                else # if previous seat in column is an adult (or it is the first seat in column)
-                  seat_id = $airplane_1[i][j] # retrieve integer from the current seat
-                  $airplane_1[i][j] = person.find { |p| p[:passenger_id] == passenger_id }
-                end
-              else # if passenger is an adult
-                seat_id = $airplane_1[i][j] # retrieve integer from the current seat
-                $airplane_1[i][j] = # set current seat with hash of passenger_id
-                  person.find do |p|
-                    p[:passenger_id] == passenger_id
-                  end
-              end
-              # print "#{$airplane_1[i][j]} "
+              seat_id = generate_seat($airplane_1, seat_id, age, person, passenger_id, i, j)
               throw :found_integer # exit both loops
             end
           end
         end
         seat_id
       when 3
-        # check if airplane updates with person data
-        # $airplane_1.each { |row| puts row.join(' ') }
         rows = $airplane_1.length
         columns = $airplane_1[0].length
 
@@ -192,27 +173,7 @@ class FlightsController < ApplicationController
           for j in 18...columns # iterate over columns
             for i in 0...rows # iterate over rows
               next unless $airplane_1[i][j].is_a?(Integer) # if it's an integer
-
-              age = person.find { |p| p[:passenger_id] == passenger_id }[:age] # retrieve age from person
-              if age < 18 # if passenger is a kid
-                if i > 0 && $airplane_1[i - 1][j].is_a?(Hash) && $airplane_1[i - 1][j][:age] < 18 # if previous seat in column is a kid
-                  seat_id = $airplane_1[i + 1][j] # retrieve integer from next seat in column
-                  $airplane_1[i + 1][j] = # set current seat with hash of passenger_id
-                    person.find do |p|
-                      p[:passenger_id] == passenger_id
-                    end
-                else # if previous seat in column is an adult (or it is the first seat in column)
-                  seat_id = $airplane_1[i][j] # retrieve integer from the current seat
-                  $airplane_1[i][j] = person.find { |p| p[:passenger_id] == passenger_id }
-                end
-              else # if passenger is an adult
-                seat_id = $airplane_1[i][j] # retrieve integer from the current seat
-                $airplane_1[i][j] = # set current seat with hash of passenger_id
-                  person.find do |p|
-                    p[:passenger_id] == passenger_id
-                  end
-              end
-              # print "#{$airplane_1[i][j]} "
+              seat_id = generate_seat($airplane_1, seat_id, age, person, passenger_id, i, j)
               throw :found_integer # exit both loops
             end
           end
@@ -221,6 +182,7 @@ class FlightsController < ApplicationController
       end
 
     when 2 # Airplane 2
+      airplane = $airplane_2
       case seat_type_id
       when 1 # Generate seat for premium class
         rows = $airplane_2.length
@@ -230,27 +192,7 @@ class FlightsController < ApplicationController
           for j in 0...columns # iterate over columns
             for i in 0...rows # iterate over rows
               next unless $airplane_2[i][j].is_a?(Integer) # if it's an integer
-
-              age = person.find { |p| p[:passenger_id] == passenger_id }[:age] # retrieve age from person
-              if age < 18 # if passenger is a kid
-                if i > 0 && $airplane_2[i - 1][j].is_a?(Hash) && $airplane_2[i - 1][j][:age] < 18 # if previous seat in column is a kid
-                  seat_id = $airplane_2[i + 1][j] # retrieve integer from next seat in column
-                  $airplane_2[i + 1][j] = # set current seat with hash of passenger_id
-                    person.find do |p|
-                      p[:passenger_id] == passenger_id
-                    end
-                else # if previous seat in column is an adult (or it is the first seat in column)
-                  seat_id = $airplane_2[i][j] # retrieve integer from the current seat
-                  $airplane_2[i][j] = person.find { |p| p[:passenger_id] == passenger_id }
-                end
-              else # if passenger is an adult
-                seat_id = $airplane_2[i][j] # retrieve integer from the current seat
-                $airplane_2[i][j] = # set current seat with hash of passenger_id
-                  person.find do |p|
-                    p[:passenger_id] == passenger_id
-                  end
-              end
-              # print "#{$airplane_1[i][j]} "
+              seat_id = generate_seat($airplane_2, seat_id, age, person, passenger_id, i, j)
               throw :found_integer # exit both loops
             end
           end
@@ -264,27 +206,7 @@ class FlightsController < ApplicationController
           for j in 8...columns # iterate over columns
             for i in 0...rows # iterate over rows
               next unless $airplane_2[i][j].is_a?(Integer) # if it's an integer
-
-              age = person.find { |p| p[:passenger_id] == passenger_id }[:age] # retrieve age from person
-              if age < 18 # if passenger is a kid
-                if i > 0 && $airplane_2[i - 1][j].is_a?(Hash) && $airplane_2[i - 1][j][:age] < 18 # if previous seat in column is a kid
-                  seat_id = $airplane_2[i + 1][j] # retrieve integer from next seat in column
-                  $airplane_2[i + 1][j] = # set current seat with hash of passenger_id
-                    person.find do |p|
-                      p[:passenger_id] == passenger_id
-                    end
-                else # if previous seat in column is an adult (or it is the first seat in column)
-                  seat_id = $airplane_2[i][j] # retrieve integer from the current seat
-                  $airplane_2[i][j] = person.find { |p| p[:passenger_id] == passenger_id }
-                end
-              else # if passenger is an adult
-                seat_id = $airplane_2[i][j] # retrieve integer from the current seat
-                $airplane_2[i][j] = # set current seat with hash of passenger_id
-                  person.find do |p|
-                    p[:passenger_id] == passenger_id
-                  end
-              end
-              # print "#{$airplane_1[i][j]} "
+              seat_id = generate_seat($airplane_2, seat_id, age, person, passenger_id, i, j)
               throw :found_integer # exit both loops
             end
           end
@@ -300,27 +222,7 @@ class FlightsController < ApplicationController
           for j in 17...columns # iterate over columns
             for i in 0...rows # iterate over rows
               next unless $airplane_2[i][j].is_a?(Integer) # if it's an integer
-
-              age = person.find { |p| p[:passenger_id] == passenger_id }[:age] # retrieve age from person
-              if age < 18 # if passenger is a kid
-                if i > 0 && $airplane_2[i - 1][j].is_a?(Hash) && $airplane_2[i - 1][j][:age] < 18 # if previous seat in column is a kid
-                  seat_id = $airplane_2[i + 1][j] # retrieve integer from next seat in column
-                  $airplane_2[i + 1][j] = # set current seat with hash of passenger_id
-                    person.find do |p|
-                      p[:passenger_id] == passenger_id
-                    end
-                else # if previous seat in column is an adult (or it is the first seat in column)
-                  seat_id = $airplane_2[i][j] # retrieve integer from the current seat
-                  $airplane_2[i][j] = person.find { |p| p[:passenger_id] == passenger_id }
-                end
-              else # if passenger is an adult
-                seat_id = $airplane_2[i][j] # retrieve integer from the current seat
-                $airplane_2[i][j] = # set current seat with hash of passenger_id
-                  person.find do |p|
-                    p[:passenger_id] == passenger_id
-                  end
-              end
-              # print "#{$airplane_1[i][j]} "
+              seat_id = generate_seat($airplane_2, seat_id, age, person, passenger_id, i, j)
               throw :found_integer # exit both loops
             end
           end
