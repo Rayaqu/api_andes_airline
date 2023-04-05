@@ -19,10 +19,37 @@ class FlightsController < ApplicationController
     airplane1 = Airplane1.new
     airplane1.distribute_seats
     $airplane_1 = airplane1.seats
-    
+
     airplane2 = Airplane2.new
     airplane2.distribute_seats
     $airplane_2 = airplane2.seats
+  end
+
+  # function to update airplanes with passengers
+  def update_airplane(airplane, boarding_passes)
+    boarding_passes.each do |boarding_pass|
+      # find the row and column indices of the seat in the matrix
+      row = nil
+      col = nil
+      airplane.each_with_index do |row_data, i|
+        next unless row_data.include?(boarding_pass.seat_id)
+
+        row = i
+        col = row_data.index(boarding_pass.seat_id)
+        break
+      end
+
+      # Update each element with the elements of boarding_pass
+      next unless row && col
+
+      airplane[row][col] = {
+        passenger_id: boarding_pass.passenger.id,
+        purchase_id: boarding_pass.purchase_id,
+        seat_type_id: boarding_pass.seat_type_id,
+        age: boarding_pass.passenger.age,
+        seat_id: boarding_pass.seat_id
+      }
+    end
   end
 
   def passengers
@@ -49,53 +76,9 @@ class FlightsController < ApplicationController
     # Update airplanes
     case flight.airplane_id
     when 1
-      boarding_passes.each do |boarding_pass|
-        # find the row and column indices of the seat in the matrix
-        row = nil
-        col = nil
-        $airplane_1.each_with_index do |row_data, i|
-          next unless row_data.include?(boarding_pass.seat_id)
-
-          row = i
-          col = row_data.index(boarding_pass.seat_id)
-          break
-        end
-
-        # Update each element with the elements of boarding_pass
-        next unless row && col
-
-        $airplane_1[row][col] = {
-          passenger_id: boarding_pass.passenger.id,
-          purchase_id: boarding_pass.purchase_id,
-          seat_type_id: boarding_pass.seat_type_id,
-          age: boarding_pass.passenger.age,
-          seat_id: boarding_pass.seat_id
-        }
-      end
+      update_airplane($airplane_1, boarding_passes)
     when 2
-      # put your code here
-      boarding_passes.each do |boarding_pass|
-        # find the row and column indices of the seat in the matrix
-        row = nil
-        col = nil
-        $airplane_2.each_with_index do |row_data, i|
-          next unless row_data.include?(boarding_pass.seat_id)
-
-          row = i
-          col = row_data.index(boarding_pass.seat_id)
-          break
-        end
-
-        next unless row && col
-
-        $airplane_2[row][col] = {
-          passenger_id: boarding_pass.passenger.id,
-          purchase_id: boarding_pass.purchase_id,
-          seat_type_id: boarding_pass.seat_type_id,
-          age: boarding_pass.passenger.age,
-          seat_id: boarding_pass.seat_id
-        }
-      end
+      update_airplane($airplane_2, boarding_passes)
     end
 
     passengers = boarding_passes.map do |bp|
@@ -160,7 +143,6 @@ class FlightsController < ApplicationController
                     p[:passenger_id] == passenger_id
                   end
               end
-              # print "#{$airplane_1[i][j]} "
               throw :found_integer # exit both loops
             end
           end
